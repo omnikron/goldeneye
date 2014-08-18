@@ -9,6 +9,17 @@
       </ul>
     </div>
   <% end %>
+  <%- ['Paul', 'Oli'].each do |name| %>
+    <%= f.fields_for :score do |s| %>
+      <%= s.label name %>
+      <%= s.text_field :score %>
+      <%= s.hidden_field :player, value: Player.find_by_name(name) %>
+      <%= s.hidden_field :game, value: @game %>
+    <% end %>
+  <% end %>
+
+  <%= f.collection_select :weapon_set, WeaponSet.all, :id, :name %>
+  <%= f.collection_select :map, Map.all, :id, :name %>
 
   <div class="actions">
     <%= f.submit %>
