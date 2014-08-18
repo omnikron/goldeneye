@@ -1,0 +1,17 @@
+<%= form_for(@weapon_set) do |f| %>
+  <% if @weapon_set.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@weapon_set.errors.count, "error") %> prohibited this weapon_set from being saved:</h2>
+
+      <ul>
+      <% @weapon_set.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

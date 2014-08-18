@@ -1,0 +1,23 @@
+<h1>Listing weapon_sets</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @weapon_sets.each do |weapon_set| %>
+      <tr>
+        <td><%= link_to 'Show', weapon_set %></td>
+        <td><%= link_to 'Edit', edit_weapon_set_path(weapon_set) %></td>
+        <td><%= link_to 'Destroy', weapon_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Weapon set', new_weapon_set_path %>
