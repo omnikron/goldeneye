@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :maps
+
   resources :scores
   resources :weapon_sets
   resources :players

@@ -11,9 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140818215749) do
+ActiveRecord::Schema.define(version: 20140818221018) do
 
   create_table "games", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "map_id"
+    t.integer  "weapon_set_id"
+  end
+
+  create_table "maps", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -35,6 +43,7 @@ ActiveRecord::Schema.define(version: 20140818215749) do
   create_table "weapon_sets", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
 end
