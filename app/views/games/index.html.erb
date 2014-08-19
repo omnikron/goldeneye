@@ -1,4 +1,54 @@
 <%= render 'form' %>
+
+<h4>Leaderboard</h4>
+
+<dl>
+  <dt>Total games:</dt>
+  <dd><%= Game.count %></dd>
+  <dt>Draws:</dt>
+  <dd><%= Game.draws.count %></dd>
+  <dt>Paul wins:</dt>
+  <dd><%= Game.wins_by('Paul').count %></dd>
+  <dt>Oli wins:</dt>
+  <dd><%= Game.wins_by('Oli').count %></dd>
+
+  <dt>Biggest normal win:</dt>
+  <% game = Game.joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL').biggest_win  %>
+  <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+  <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
+  <%= game.weapon_set.name%></dd>
+
+  <dt>Biggest win overall:</dt>
+  <% game = Game.biggest_win  %>
+  <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+  <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
+  <%= game.weapon_set.name%> <em><%= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
+</dl>
+
+  <h4>Map usage:</h4>
+  <table>
+    <% Map.popularity.each do |map| %>
+      <tr>
+        <td><%= map.name %>
+        <td><%= map.games.count %>
+      </tr>
+    <% end %>
+  </table>
+
+  <h4>Weapon usage:</h4>
+  <table>
+    <% WeaponSet.popularity.each do |ws| %>
+      <tr>
+        <td><%= ws.name %>
+        <td><%= ws.games.count %>
+      </tr>
+    <% end %>
+  </table>
+
+
+<br>
+
+<h4>All games</h4>
 <table>
   <thead>
     <tr>
@@ -24,5 +74,3 @@
 </table>
 
 <br>
-
-<%= link_to 'New Game', new_game_path %>

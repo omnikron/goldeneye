@@ -7,7 +7,27 @@ class Game < ActiveRecord::Base
 
   accepts_nested_attributes_for :scores
 
-  after_initialize :setup_scores, on: :create
+  after_initialize :setup_scores
+
+  class << self
+    def draws
+      all.select {|g| g.draw? }
+    end
+
+    def wins_by(player_name)
+      player = Player.find_by_name(player_name)
+      all.select {|g| g.winner == player }
+    end
+
+    def losses_by(player_name)
+      player = Player.find_by_name(player_name)
+      all.select {|g| g.loser == player }
+    end
+
+    def biggest_win
+      all.sort_by {|g| g.scores.order('score DESC').first.score - g.scores.order('score DESC').last.score }.last
+    end
+  end
 
   def note(body)
     notes.create(body: body)
@@ -18,10 +38,26 @@ class Game < ActiveRecord::Base
     scores.where(player: player).first.score
   end
 
+  def winner
+    return nil if draw?
+    scores.order('score DESC').first.player
+  end
+
+  def loser
+    return nil if draw?
+    scores.order('score DESC').last.player
+  end
+
+  def draw?
+    scores.pluck(:score).uniq.count == 1
+  end
+
   private
   def setup_scores
-    [Player.find_by_name('Paul'), Player.find_by_name('Oli')].each do |p|
-      scores.build(player: p)
+    if self.new_record?
+      [Player.find_by_name('Paul'), Player.find_by_name('Oli')].each do |p|
+        scores.build(player: p)
+      end
     end
   end
 end
