@@ -1,18 +1,23 @@
-<h1>Listing games</h1>
-
+<%= render 'form' %>
 <table>
   <thead>
     <tr>
-      <th colspan="3"></th>
+      <th>Paul</th>
+      <th>Oli</th>
+      <th>Map</th>
+      <th>Weapons</th>
+      <th>Notes</th>
     </tr>
   </thead>
 
   <tbody>
     <% @games.each do |game| %>
       <tr>
-        <td><%= link_to 'Show', game %></td>
-        <td><%= link_to 'Edit', edit_game_path(game) %></td>
-        <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= game.score('Paul') %>
+        <td><%= game.score('Oli') %>
+        <td><%= game.map.name %>
+        <td><%= game.weapon_set.name %>
+        <td><%= game.notes.first.try(:body) %>
       </tr>
     <% end %>
   </tbody>

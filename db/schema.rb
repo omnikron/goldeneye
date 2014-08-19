@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140818221018) do
+ActiveRecord::Schema.define(version: 20140818234310) do
 
   create_table "games", force: true do |t|
     t.datetime "created_at"
@@ -22,6 +22,13 @@ ActiveRecord::Schema.define(version: 20140818221018) do
 
   create_table "maps", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notes", force: true do |t|
+    t.integer  "game_id"
+    t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
