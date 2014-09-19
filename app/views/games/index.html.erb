@@ -11,6 +11,10 @@
   <dd><%= Game.wins_by('Paul').count %></dd>
   <dt>Oli wins:</dt>
   <dd><%= Game.wins_by('Oli').count %></dd>
+  <dt>Paul total score:</dt>
+  <dd><%= Player.find_by_name('Paul').total_score %></dd>
+  <dt>Oli total score:</dt>
+  <dd><%= Player.find_by_name('Oli').total_score %></dd>
 
   <dt>Biggest normal win:</dt>
   <% game = Game.joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL').biggest_win  %>

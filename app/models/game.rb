@@ -4,6 +4,7 @@ class Game < ActiveRecord::Base
   has_many :players, through: :scores
   has_many :scores
   has_many :notes
+  default_scope { includes(:scores) }
 
   accepts_nested_attributes_for :scores
 
@@ -54,7 +55,7 @@ class Game < ActiveRecord::Base
 
   private
   def setup_scores
-    if self.new_record?
+    if self.scores.blank?
       [Player.find_by_name('Paul'), Player.find_by_name('Oli')].each do |p|
         scores.build(player: p)
       end
