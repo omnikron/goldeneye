@@ -8,7 +8,7 @@
       <dl>
         <dt>Total games:</dt>
         <dd><%= Game.count %></dd>
-        <dt>Draws:</dt>
+        <dt class='draw'>Draws:</dt>
         <dd><%= Game.draws.count %></dd>
         <dt>Paul wins:</dt>
         <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
@@ -73,7 +73,7 @@
 
       <tbody>
         <% @games.each_with_index do |game, index| %>
-          <tr class=<%= game.winner.present? ? (game.winner.name == 'Paul' ? 'paul' : 'oli') : 'silver' %>>
+          <tr class=<%= game.winner.present? ? (game.winner.name == 'Paul' ? 'paul' : 'oli') : 'draw' %>>
             <td><%= game.score('Paul') %>
             <td><%= game.score('Oli') %>
             <td><%= game.map.name %>
