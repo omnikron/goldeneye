@@ -1,80 +1,96 @@
-<%= render 'form' %>
+<div class='container'>
+  <div class='row'>
+    <%= render 'form' %>
+  </div>
 
-<h4>Leaderboard</h4>
+  <div class='row'>
+    <div class='col-md-3'>
+      <dl>
+        <dt>Total games:</dt>
+        <dd><%= Game.count %></dd>
+        <dt>Draws:</dt>
+        <dd><%= Game.draws.count %></dd>
+        <dt>Paul wins:</dt>
+        <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
+        <dt >Oli wins:</dt>
+        <dd class='oli'><%= Game.wins_by('Oli').count %></dd>
+        <dt>Paul total score:</dt>
+        <dd><%= Player.find_by_name('Paul').total_score %></dd>
+        <dt>Oli total score:</dt>
+        <dd><%= Player.find_by_name('Oli').total_score %></dd>
 
-<dl>
-  <dt>Total games:</dt>
-  <dd><%= Game.count %></dd>
-  <dt>Draws:</dt>
-  <dd><%= Game.draws.count %></dd>
-  <dt>Paul wins:</dt>
-  <dd><%= Game.wins_by('Paul').count %></dd>
-  <dt>Oli wins:</dt>
-  <dd><%= Game.wins_by('Oli').count %></dd>
-  <dt>Paul total score:</dt>
-  <dd><%= Player.find_by_name('Paul').total_score %></dd>
-  <dt>Oli total score:</dt>
-  <dd><%= Player.find_by_name('Oli').total_score %></dd>
+        <dt>Biggest normal win:</dt>
+        <% game = Game.joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL').biggest_win  %>
+        <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+        <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
+        <%= game.weapon_set.name%></dd>
 
-  <dt>Biggest normal win:</dt>
-  <% game = Game.joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL').biggest_win  %>
-  <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
-  <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
-  <%= game.weapon_set.name%></dd>
+        <dt>Biggest win overall:</dt>
+        <% game = Game.biggest_win  %>
+        <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+        <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
+        <%= game.weapon_set.name%> <em><%= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
+      </dl>
+    </div>
 
-  <dt>Biggest win overall:</dt>
-  <% game = Game.biggest_win  %>
-  <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
-  <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
-  <%= game.weapon_set.name%> <em><%= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
-</dl>
+    <div class='col-md-3'>
+      <h4>Map usage:</h4>
+      <table>
+        <% Map.popularity.each do |map| %>
+          <tr>
+          <td><%= map.name %>
+          <td><%= map.games.count %>
+          </tr>
+        <% end %>
+      </table>
+    </div>
 
-  <h4>Map usage:</h4>
-  <table>
-    <% Map.popularity.each do |map| %>
-      <tr>
-        <td><%= map.name %>
-        <td><%= map.games.count %>
-      </tr>
-    <% end %>
-  </table>
+    <div class='col-md-3'>
+      <h4>Weapon usage:</h4>
+      <table>
+        <% WeaponSet.popularity.each do |ws| %>
+          <tr>
+          <td><%= ws.name %>
+          <td><%= ws.games.count %>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
 
-  <h4>Weapon usage:</h4>
-  <table>
-    <% WeaponSet.popularity.each do |ws| %>
-      <tr>
-        <td><%= ws.name %>
-        <td><%= ws.games.count %>
-      </tr>
-    <% end %>
-  </table>
+  <div class='row'>
+    <h4>All games</h4>
+    <table class='table table-condensed'>
+      <thead>
+        <tr>
+          <th>Paul</th>
+          <th>Oli</th>
+          <th>Map</th>
+          <th>Weapons</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
 
-
-<br>
-
-<h4>All games</h4>
-<table>
-  <thead>
-    <tr>
-      <th>Paul</th>
-      <th>Oli</th>
-      <th>Map</th>
-      <th>Weapons</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @games.each do |game| %>
-      <tr>
-        <td><%= game.score('Paul') %>
-        <td><%= game.score('Oli') %>
-        <td><%= game.map.name %>
-        <td><%= game.weapon_set.name %>
-        <td><%= game.notes.first.try(:body) %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+      <tbody>
+        <% @games.each_with_index do |game, index| %>
+          <tr class=<%= game.winner.present? ? (game.winner.name == 'Paul' ? 'paul' : 'oli') : 'silver' %>>
+            <td><%= game.score('Paul') %>
+            <td><%= game.score('Oli') %>
+            <td><%= game.map.name %>
+            <td><%= game.weapon_set.name %>
+            <td><%= game.notes.first.try(:body) %>
+          </tr>
+          <% if game.different_playing_session?(@games[index + 1]) %>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

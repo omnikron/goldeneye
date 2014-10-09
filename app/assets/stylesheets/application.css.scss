@@ -1,0 +1,11 @@
+$font-family-sans-serif:  "BankGothic Lt BT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+body {
+  background: black url("background.jpg") no-repeat;
+  background-size: 100% auto;
+  background-attachment: fixed;
+  color: green !important;
+}
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "goldeneye";

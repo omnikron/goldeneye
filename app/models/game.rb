@@ -34,6 +34,12 @@ class Game < ActiveRecord::Base
     notes.create(body: body)
   end
 
+  def different_playing_session?(game)
+    return false if game.blank?
+
+    self.created_at > game.created_at + 30.minutes
+  end
+
   def score(player_name)
     player = players.find_by_name(player_name)
     scores.where(player: player).first.score

@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [:show, :edit, :update, :destroy]
 
   def index
-    @games = Game.all
+    @games = Game.order('created_at DESC')
     @game = Game.new
   end
 
