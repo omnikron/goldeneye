@@ -11,6 +11,10 @@ class Game < ActiveRecord::Base
   after_initialize :setup_scores
 
   class << self
+    def no_notes
+      joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL')
+    end
+
     def draws
       all.select {|g| g.draw? }
     end
@@ -25,8 +29,8 @@ class Game < ActiveRecord::Base
       all.select {|g| g.loser == player }
     end
 
-    def biggest_win
-      all.sort_by {|g| g.scores.order('score DESC').first.score - g.scores.order('score DESC').last.score }.last
+    def biggest_wins(count = 1)
+      all.sort_by {|g| g.scores.order('score DESC').first.score - g.scores.order('score DESC').last.score }.last(count).reverse
     end
   end
 

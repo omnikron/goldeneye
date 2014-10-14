@@ -8,28 +8,32 @@
       <dl>
         <dt>Total games:</dt>
         <dd><%= Game.count %></dd>
-        <dt class='draw'>Draws:</dt>
-        <dd><%= Game.draws.count %></dd>
+        <dt>Draws:</dt>
+        <dd class='draw'><%= Game.draws.count %></dd>
         <dt>Paul wins:</dt>
         <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
-        <dt >Oli wins:</dt>
+        <dt>Oli wins:</dt>
         <dd class='oli'><%= Game.wins_by('Oli').count %></dd>
         <dt>Paul total score:</dt>
-        <dd><%= Player.find_by_name('Paul').total_score %></dd>
+        <dd class='paul'><%= Player.find_by_name('Paul').total_score %></dd>
         <dt>Oli total score:</dt>
-        <dd><%= Player.find_by_name('Oli').total_score %></dd>
+        <dd class='oli'><%= Player.find_by_name('Oli').total_score %></dd>
 
-        <dt>Biggest normal win:</dt>
-        <% game = Game.joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL').biggest_win  %>
-        <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
-        <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
-        <%= game.weapon_set.name%></dd>
 
+        <dt>Top three wins</dt>
+        <% Game.no_notes.biggest_wins(3).each do |game|  %>
+          <dd class='<%= game.winner.name.downcase %>'><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+          <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
+          <%= game.weapon_set.name%></dd>
+        <% end %>
+
+        <!--
         <dt>Biggest win overall:</dt>
-        <% game = Game.biggest_win  %>
+        <% game = Game.biggest_wins.first  %>
         <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
         <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
         <%= game.weapon_set.name%> <em><%= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
+        -->
       </dl>
     </div>
 
