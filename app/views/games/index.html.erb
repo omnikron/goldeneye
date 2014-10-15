@@ -39,11 +39,13 @@
 
     <div class='col-md-3'>
       <h4>Map usage:</h4>
-      <table>
+      <table class='table table-condensed'>
         <% Map.popularity.each do |map| %>
           <tr>
-          <td><%= map.name %>
-          <td><%= map.games.count %>
+            <td><%= map.name %></td>
+            <td><%= map.games.count %></td>
+            <td class='paul <%= map.current_winner == 'Paul' ? 'bold' : 'light' %>'><%= number_with_precision map.win_percentage(:paul), precision: 0%>%</td>
+            <td class='oli <%= map.current_winner == 'Oli' ? 'bold' : 'light' %>'><%= number_with_precision map.win_percentage(:oli), precision: 0 %>%</td>
           </tr>
         <% end %>
       </table>
@@ -51,11 +53,13 @@
 
     <div class='col-md-3'>
       <h4>Weapon usage:</h4>
-      <table>
+      <table class='table table-condensed' >
         <% WeaponSet.popularity.each do |ws| %>
           <tr>
-          <td><%= ws.name %>
-          <td><%= ws.games.count %>
+            <td><%= ws.name %></td>
+            <td><%= ws.games.count %></td>
+            <td class='paul <%= ws.current_winner == 'Paul' ? 'bold' : 'light' %>'><%= number_with_precision ws.win_percentage(:paul), precision: 0 %>%</td>
+            <td class='oli <%= ws.current_winner == 'Oli' ? 'bold' : 'light' %>'><%= number_with_precision ws.win_percentage(:oli), precision: 0 %>%</td>
           </tr>
         <% end %>
       </table>
