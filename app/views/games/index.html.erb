@@ -1,104 +1,157 @@
-<div class='container'>
-  <div class='row'>
+<div class='row entry-form'>
+  <div class='col-md-12'>
     <%= render 'form' %>
   </div>
+</div>
 
-  <div class='row'>
-    <div class='col-md-3'>
-      <dl>
-        <dt>Total games:</dt>
-        <dd><%= Game.count %></dd>
-        <dt>Draws:</dt>
-        <dd class='draw'><%= Game.draws.count %></dd>
-        <dt>Paul wins:</dt>
-        <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
-        <dt>Oli wins:</dt>
-        <dd class='oli'><%= Game.wins_by('Oli').count %></dd>
-        <dt>Paul total score:</dt>
-        <dd class='paul'><%= Player.find_by_name('Paul').total_score %></dd>
-        <dt>Oli total score:</dt>
-        <dd class='oli'><%= Player.find_by_name('Oli').total_score %></dd>
+<div class='row'>
+  <div class='col-md-4'>
+    <dl>
+      <dt>Total games:</dt>
+      <dd><%= Game.count %></dd>
+      <dt>Draws:</dt>
+      <dd class='draw'><%= Game.draws.count %></dd>
+      <dt>Paul wins:</dt>
+      <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
+      <dt>Oli wins:</dt>
+      <dd class='oli'><%= Game.wins_by('Oli').count %></dd>
+      <dt>Paul total score:</dt>
+      <dd class='paul'><%= Player.find_by_name('Paul').total_score %></dd>
+      <dt>Oli total score:</dt>
+      <dd class='oli'><%= Player.find_by_name('Oli').total_score %></dd>
 
-
-        <dt>Top three wins</dt>
-        <% Game.no_notes.biggest_wins(3).each do |game|  %>
-          <dd class='<%= game.winner.name.downcase %>'><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
-          <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
-          <%= game.weapon_set.name%></dd>
-        <% end %>
-
-        <!--
-        <dt>Biggest win overall:</dt>
-        <% game = Game.biggest_wins.first  %>
-        <dd><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
+      <dt>Top three wins</dt>
+      <% Game.no_notes.biggest_wins(3).each do |game|  %>
+        <dd class='<%= game.winner.name.downcase %>'><%= game.winner.name %> - <%= game.score(game.winner.name)  %> to 
         <%= game.score(game.loser.name) %> on <%= game.map.name %> with 
-        <%= game.weapon_set.name%> <em><%= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
-        -->
-      </dl>
-    </div>
+        <%= game.weapon_set.name%></dd>
+      <% end %>
+      <br>
 
-    <div class='col-md-3'>
-      <h4>Map usage:</h4>
+      <dt>Hottest Streaks   <%= image_tag 'flames.gif' %></dt>
+      <dd class='hottest-streaks'>
+        <table class='table table-condensed'>
+          <tr>
+            <td class='col-md-1'>Paul</td> <td class='col-md-1'><%= pluralize(paul.longest_streak.length, 'game') %></td>
+            <% Game.total_score(paul.longest_streak).sort_by{|player, _| player == paul ? -1 : 1 }.each do |player, score| %> 
+              <td class='col-md-1 <%= player.name.downcase %>'>
+                <%= score %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>Oli</td><td><%= pluralize(oli.longest_streak.length, 'game') %></td>
+            <% Game.total_score(oli.longest_streak).sort_by{|player, _| player == oli ? -1 : 1 }.each do |player, score| %> 
+              <td class='<%= player.name.downcase %>'>
+                <%= score %>
+              </td>
+            <% end %>
+          </tr>
+          <tfoot>
+          <tr>
+          <td></td>
+          <td>&#8593; length</td>
+          <td>score&#8599;</td>
+          <td></td>
+          </tr>
+          </tfoot>
+        </table>
+      </dd>
+      <div class='current-streak'>
+      <dt>Current Streak</dt>
+      <dd>
       <table class='table table-condensed'>
-        <% Map.popularity.each do |map| %>
-          <tr>
-            <td><%= map.name %></td>
-            <td><%= map.games.count %></td>
-            <td class='paul <%= map.current_winner == 'Paul' ? 'bold' : 'light' %>'><%= number_with_precision map.win_percentage(:paul), precision: 0%>%</td>
-            <td class='oli <%= map.current_winner == 'Oli' ? 'bold' : 'light' %>'><%= number_with_precision map.win_percentage(:oli), precision: 0 %>%</td>
-          </tr>
+      <tr>
+      <td class='col-md-1'>
+        <%= streak_winner.name %>
+      </td>
+      <td class='col-md-1'><%= pluralize(current_streak.length, 'game') %> </td>
+        <% Game.total_score(current_streak).sort_by{|player, _| player == streak_winner ? -1 : 1 }.each do |player, score| %> 
+          <td class='col-md-1 <%= player.name.downcase %>'>
+            <%= score %>
+          </td>
         <% end %>
+        </tr>
       </table>
-    </div>
-
-    <div class='col-md-3'>
-      <h4>Weapon usage:</h4>
-      <table class='table table-condensed' >
-        <% WeaponSet.popularity.each do |ws| %>
-          <tr>
-            <td><%= ws.name %></td>
-            <td><%= ws.games.count %></td>
-            <td class='paul <%= ws.current_winner == 'Paul' ? 'bold' : 'light' %>'><%= number_with_precision ws.win_percentage(:paul), precision: 0 %>%</td>
-            <td class='oli <%= ws.current_winner == 'Oli' ? 'bold' : 'light' %>'><%= number_with_precision ws.win_percentage(:oli), precision: 0 %>%</td>
-          </tr>
-        <% end %>
-      </table>
-    </div>
+      </dd>
+      </div>
+      <!--
+      <dt>Biggest win overall:</dt>
+      <# game = Game.biggest_wins.first  %>
+      <dd><#= game.winner.name %> - <#= game.score(game.winner.name)  %> to 
+      <#= game.score(game.loser.name) %> on <#= game.map.name %> with 
+      <#= game.weapon_set.name%> <em><#= game.notes.present? ? "(#{game.notes.first.body})" : nil %></em></dd>
+      -->
+    </dl>
   </div>
 
-  <div class='row'>
-    <h4>All games</h4>
+  <div class='col-md-4'>
+    <h4>Map usage:</h4>
     <table class='table table-condensed'>
-      <thead>
+      <% Map.popularity.each do |map| %>
         <tr>
-          <th>Paul</th>
-          <th>Oli</th>
-          <th>Map</th>
-          <th>Weapons</th>
-          <th>Notes</th>
+          <td><%= map.name %></td>
+          <td><%= map.games.count %></td>
+          <td class='paul <%= 'bold' if map.current_winner == 'Paul' %>'><%= number_with_precision map.win_percentage(:paul), precision: 0%>%</td>
+          <td class='oli <%= 'bold' if map.current_winner == 'Oli' %>'><%= number_with_precision map.win_percentage(:oli), precision: 0 %>%</td>
         </tr>
-      </thead>
+      <% end %>
+    </table>
 
-      <tbody>
-        <% @games.each_with_index do |game, index| %>
-          <tr class=<%= game.winner.present? ? (game.winner.name == 'Paul' ? 'paul' : 'oli') : 'draw' %>>
-            <td><%= game.score('Paul') %>
-            <td><%= game.score('Oli') %>
-            <td><%= game.map.name %>
-            <td><%= game.weapon_set.name %>
-            <td><%= game.notes.first.try(:body) %>
-          </tr>
-          <% if game.different_playing_session?(@games[index + 1]) %>
-            <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-          <% end %>
-        <% end %>
-      </tbody>
+    <div class='xenia-container'>
+      <div class='xenia-background'></div>
+      <div class='xenia-overlay <%=streak_winner.name.downcase %>'></div>
+    </div>
+
+  </div>
+
+  <div class='col-md-4'>
+    <h4>Weapon usage:</h4>
+    <table class='table table-condensed' >
+      <% WeaponSet.popularity.each do |ws| %>
+        <tr>
+          <td><%= ws.name %></td>
+          <td><%= ws.games.count %></td>
+          <td class='paul <%= 'bold' if ws.current_winner == 'Paul' %>'><%= number_with_precision ws.win_percentage(:paul), precision: 0 %>%</td>
+          <td class='oli <%= 'bold' if ws.current_winner == 'Oli' %>'><%= number_with_precision ws.win_percentage(:oli), precision: 0 %>%</td>
+        </tr>
+      <% end %>
     </table>
   </div>
+</div>
+
+<div class='row'>
+  <h4>All games</h4>
+  <table class='table table-condensed'>
+    <thead>
+      <tr>
+        <th>Paul</th>
+        <th>Oli</th>
+        <th>Map</th>
+        <th>Weapons</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @games.each_with_index do |game, index| %>
+        <tr class=<%= game.winner.present? ? (game.winner.name == 'Paul' ? 'paul' : 'oli') : 'draw' %>>
+          <td><%= game.score('Paul') %>
+          <td><%= game.score('Oli') %>
+          <td><%= game.map.name %>
+          <td><%= game.weapon_set.name %>
+          <td><%= game.notes.first.try(:body) %>
+        </tr>
+        <% if game.different_playing_session?(@games[index + 1]) %>
+          <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
 </div>

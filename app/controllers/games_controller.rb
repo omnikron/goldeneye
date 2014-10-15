@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [:show, :edit, :update, :destroy]
+  helper_method :streak_winner, :current_streak, :paul, :oli
 
   def index
     @games = Game.order('created_at DESC')
@@ -59,5 +60,21 @@ class GamesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
       params[:game].permit!
+    end
+
+    def streak_winner
+      Game.last_win.winner
+    end
+
+    def current_streak
+      streak_winner.streaks.last
+    end
+
+    def paul
+      Player.find_by_name('Paul')
+    end
+
+    def oli
+      Player.find_by_name('Oli')
     end
 end

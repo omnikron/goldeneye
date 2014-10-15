@@ -1,22 +1,84 @@
+body {
+  background: black url("background.jpg") no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  color: limegreen !important;
+}
+
+
+.start-button {
+  background: transparent url("start.png") no-repeat;
+  border: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 40px;
+  height: 0;
+  padding-top: percentage( 100 / 100 );
+}
+
 .oli {
-  background-color: powderblue;
-  opacity: 0.4;
+  background-color: rgb(176,224,230);
+  color: green;
 }
 
 .paul {
-  background-color: khaki;
-  opacity: 0.4;
+  background-color: rgb(240,230,140);
+  color: green;
 }
 
 .draw {
-  background-color: silver;
-  opacity: 0.4;
+  background-color: rgb(192,192,192);
+  color: green;
 }
 
 .bold {
   font-weight: bolder;
+  font-size: 110%;
 }
 
-.light {
-  font-weight: lighter;
+.container {
+  background-color:rgba(0,100,0,0.4);
+}
+
+.entry-form {
+  padding: 30px 0 30px 0;
+}
+
+.hottest-streaks {
+  table {
+    margin-bottom: 0px;
+  }
+}
+
+.xenia-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.xenia-background {
+  background: transparent url("xenia.jpg") no-repeat;
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* 66.64%; /* (img-height / img-width * width) */
+  /* (853 / 1280 * 100) */
+}
+
+.xenia-overlay, .xenia-background {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  padding-top: percentage( 728 / 1024 );
+}
+
+.xenia-overlay {
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.current-streak {
+  background: rgba(255,255,255,0.2) url('flame-background.gif');
+  size: 100%;
+  background-size: contain;
 }

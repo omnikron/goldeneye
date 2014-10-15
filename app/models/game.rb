@@ -10,13 +10,37 @@ class Game < ActiveRecord::Base
 
   after_initialize :setup_scores
 
+  # games pre-watershed were entered all at once and don't have valid dating/ordering
+  WATERSHED = DateTime.civil(2014,8,19,00,21)
+
   class << self
+    def total_score(games = nil)
+      games = games.present? ? self.where(id: games.map(&:id)) : all
+
+      Player.all.inject({}) do |hash, player|
+        hash[player] = games.score_for(player)
+        hash
+      end
+    end
+
+    def score_for(player)
+      joins(:scores).where(scores: {player: player}).sum(:score)
+    end
+
     def no_notes
       joins('LEFT OUTER JOIN notes ON notes.game_id = games.id').where('notes.game_id IS NULL')
     end
 
+    def since_watershed
+      where(arel_table[:created_at].gteq(WATERSHED))
+    end
+
     def draws
       all.select {|g| g.draw? }
+    end
+
+    def last_win
+      (all - draws).last
     end
 
     def wins_by(player_name)
@@ -65,7 +89,7 @@ class Game < ActiveRecord::Base
 
   private
   def setup_scores
-    if self.scores.blank?
+    if new_record? && scores.blank?
       [Player.find_by_name('Paul'), Player.find_by_name('Oli')].each do |p|
         scores.build(player: p)
       end
