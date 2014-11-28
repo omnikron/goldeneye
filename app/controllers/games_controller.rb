@@ -3,8 +3,11 @@ class GamesController < ApplicationController
   helper_method :streak_winner, :current_streak, :paul, :oli
 
   def index
-    @games = Game.order('created_at DESC')
+    @games = Game.order('created_at DESC').limit(20)
     @game = Game.new
+  end
+
+  def top_combinations
   end
 
   def show

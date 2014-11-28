@@ -6,8 +6,8 @@ class Player < ActiveRecord::Base
     scores.pluck(:score).sum
   end
 
-  def longest_streak
-    streaks.sort_by {|streak| streak.length }.last
+  def longest_streaks(count = 1)
+    streaks.sort_by {|streak| streak.length }.last(count)
   end
 
   def streaks

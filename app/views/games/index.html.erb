@@ -26,21 +26,33 @@
       <dd class='hottest-streaks'>
         <table class='table table-condensed'>
           <tr>
-            <td class='col-md-1'>Paul</td> <td class='col-md-1'><%= pluralize(paul.longest_streak.length, 'game') %></td>
-            <% Game.total_score(paul.longest_streak).sort_by{|player, _| player == paul ? -1 : 1 }.each do |player, score| %> 
+          <td>Paul</td>
+          </tr>
+        <tr>
+          <% paul.longest_streaks(3).reverse.each do |streak| %>
+            <tr>
+              <td class='col-md-1'><%= pluralize(streak.length, 'game') %></td>
+            <% Game.total_score(streak).sort_by{|player, _| player == paul ? -1 : 1 }.each do |player, score| %> 
               <td class='col-md-1 <%= player.name.downcase %>'>
                 <%= score %>
               </td>
-            <% end %>
-          </tr>
+              <% end %>
+            </tr>
+          <% end %>
           <tr>
-            <td>Oli</td><td><%= pluralize(oli.longest_streak.length, 'game') %></td>
-            <% Game.total_score(oli.longest_streak).sort_by{|player, _| player == oli ? -1 : 1 }.each do |player, score| %> 
-              <td class='<%= player.name.downcase %>'>
-                <%= score %>
-              </td>
-            <% end %>
+          <td>Oli</td>
           </tr>
+          <% oli.longest_streaks(3).reverse.each do |streak| %>
+            <tr>
+                <td><%= pluralize(streak.length, 'game') %></td>
+              <% Game.total_score(streak).sort_by{|player, _| player == oli ? -1 : 1 }.each do |player, score| %> 
+                <td class='<%= player.name.downcase %>'>
+                  <%= score %>
+                </td>
+            <% end %>
+            </tr>
+          <% end %>
+            
           <tfoot>
           <tr>
           <td></td>
@@ -112,6 +124,7 @@
       <% end %>
     </table>
       <%= button_to 'Add a game', new_game_path, method: 'get', class: 'button button-info' %>
+      <%= button_to 'Top Combos', top_combinations_games_path, method: 'get', class: 'button button-info' %>
   </div>
 </div>
 

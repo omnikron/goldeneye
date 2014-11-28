@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   resources :scores
   resources :weapon_sets
   resources :players
-  resources :games
+  resources :games do
+    collection do
+      get :top_combinations
+    end
+  end
 
   root to: 'games#index'
 end
