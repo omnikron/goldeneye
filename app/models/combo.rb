@@ -3,7 +3,7 @@ class Combo
   attr_accessor :map, :weapon_set, :games
 
   def self.top(count = 10)
-    all.sort_by {|combo| combo.games.count }.reverse.first(count)
+    all.sort_by {|combo| combo.games.count }.reverse#.first(count)
   end
 
   def self.all
