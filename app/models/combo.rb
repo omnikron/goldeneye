@@ -17,4 +17,8 @@ class Combo
     self.weapon_set = weapon_set
     self.games      = Game.where(map: map, weapon_set: weapon_set)
   end
+
+  def score(player_name)
+    Score.where(player: Player.find_by_name(player_name)).joins(:game).where(game: games).sum(:score)
+  end
 end

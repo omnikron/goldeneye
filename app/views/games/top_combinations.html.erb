@@ -3,6 +3,14 @@
   <div class='col-md-4'>
     <h4>Top Combos</h4>
     <table class='table table-condensed'>
+      <tr>
+        <th>Map</td>
+        <th>Weapons</td>
+        <th>Total Games</td>
+        <th>Paul %</td>
+        <th>Oli %</td>
+        <th>Paul Kills</td>
+        <th>Oli Kills</td>
       <% Combo.top(20).each do |combo| %>
         <tr>
           <td><%= combo.map.name %></td>
@@ -10,6 +18,8 @@
           <td><%= combo.games.count %></td>
           <td class='paul <%= 'bold' if combo.current_winner == 'Paul' %>'><%= number_with_precision combo.win_percentage(:paul), precision: 0%>%</td>
           <td class='oli <%= 'bold' if combo.current_winner == 'Oli' %>'><%= number_with_precision combo.win_percentage(:oli), precision: 0 %>%</td>
+          <td class='paul <%= 'bold' if combo.current_winner == 'Paul' %>'><%= combo.score('Paul') %></td>
+          <td class='oli <%= 'bold' if combo.current_winner == 'Oli' %>'><%= combo.score('Oli') %></td>
         </tr>
       <% end %>
       Total: <%= Combo.top(20).inject(0) {|sum, combo| sum += combo.games.count; sum } %> / <%= Game.count %>
