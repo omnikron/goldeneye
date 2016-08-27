@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   has_many :players, through: :scores
   has_many :scores
   has_many :notes
-  default_scope { includes(:scores) }
+  default_scope { includes(:scores, :players) }
 
   accepts_nested_attributes_for :scores
 
@@ -24,7 +24,7 @@ class Game < ActiveRecord::Base
     end
 
     def score_for(player)
-      joins(:scores).where(scores: {player: player}).sum(:score)
+      joins(:scores).where(scores: {player: player}).sum('scores.score')
     end
 
     def no_notes
@@ -36,25 +36,29 @@ class Game < ActiveRecord::Base
     end
 
     def draws
-      all.select {|g| g.draw? }
+      where("(SELECT COUNT (DISTINCT score) FROM scores WHERE game_id = games.id) = 1").distinct
+    end
+
+    def wins
+      where("(SELECT COUNT (DISTINCT score) FROM scores WHERE game_id = games.id) != 1").distinct
     end
 
     def last_win
-      (all - draws).last
+      wins.last
     end
 
     def wins_by(player_name)
       player = Player.find_by_name(player_name)
-      all.select {|g| g.winner == player }
+      wins.where("(SELECT player_id FROM scores WHERE scores.game_id = games.id ORDER BY score DESC LIMIT 1) = ?", player.id)
     end
 
     def losses_by(player_name)
       player = Player.find_by_name(player_name)
-      all.select {|g| g.loser == player }
+      wins.where("(SELECT player_id FROM scores WHERE scores.game_id = games.id ORDER BY score ASC LIMIT 1) = ?", player.id)
     end
 
     def biggest_wins(count = 1)
-      all.sort_by {|g| g.scores.order('score DESC').first.score - g.scores.order('score DESC').last.score }.last(count).reverse
+      joins(:scores).order("( SELECT score FROM scores WHERE scores.game_id = games.id ORDER BY score DESC LIMIT 1) - (SELECT score FROM scores WHERE scores.game_id = games.id ORDER BY score ASC limit 1) DESC").limit(count)
     end
   end
 
