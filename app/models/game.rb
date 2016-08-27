@@ -2,8 +2,8 @@ class Game < ActiveRecord::Base
   belongs_to :weapon_set
   belongs_to :map
   has_many :players, through: :scores
-  has_many :scores
-  has_many :notes
+  has_many :scores, dependent: :destroy
+  has_many :notes, dependent: :destroy
 
   accepts_nested_attributes_for :scores
 
