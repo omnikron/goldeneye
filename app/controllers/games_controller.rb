@@ -3,7 +3,7 @@ class GamesController < ApplicationController
   helper_method :streak_winner, :current_streak, :paul, :oli
 
   def index
-    @games = Game.order('created_at DESC')#.limit(20)
+    @games = Game.order('created_at DESC').includes(:scores, :map, :weapon_set, :notes).limit(100)
     @game  = Game.new
   end
 
@@ -55,29 +55,29 @@ class GamesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_game
-      @game = Game.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_game
+    @game = Game.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def game_params
-      params[:game].permit!
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def game_params
+    params[:game].permit!
+  end
 
-    def streak_winner
-      Game.last_win.winner
-    end
+  def streak_winner
+    @streak_winner ||= Game.last_win.winner
+  end
 
-    def current_streak
-      streak_winner.streaks.last
-    end
+  def current_streak
+    @current_streak ||= streak_winner.streaks.last
+  end
 
-    def paul
-      @paul ||= Player.find_by_name('Paul')
-    end
+  def paul
+    @paul ||= Player.find_by_name('Paul')
+  end
 
-    def oli
-      @oli ||= Player.find_by_name('Oli')
-    end
+  def oli
+    @oli ||= Player.find_by_name('Oli')
+  end
 end

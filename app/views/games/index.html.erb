@@ -6,9 +6,9 @@
       <dt>Draws:</dt>
       <dd class='draw'><%= Game.draws.count %></dd>
       <dt>Paul wins:</dt>
-      <dd class='paul'><%= Game.wins_by('Paul').count %></dd>
+      <dd class='paul'><%= Game.wins_by(paul).count %></dd>
       <dt>Oli wins:</dt>
-      <dd class='oli'><%= Game.wins_by('Oli').count %></dd>
+      <dd class='oli'><%= Game.wins_by(oli).count %></dd>
       <dt>Paul total score:</dt>
       <dd class='paul'><%= Player.find_by_name('Paul').total_score %></dd>
       <dt>Oli total score:</dt>
@@ -98,8 +98,8 @@
         <tr>
           <td><%= map.name %></td>
           <td><%= map.games.count %></td>
-          <td class='paul <%= 'bold' if map.current_winner == 'Paul' %>'><%= number_with_precision map.win_percentage(:paul), precision: 0%>%</td>
-          <td class='oli <%= 'bold' if map.current_winner == 'Oli' %>'><%= number_with_precision map.win_percentage(:oli), precision: 0 %>%</td>
+          <td class='paul <%= 'bold' if map.current_winner == paul %>'><%= number_with_precision map.win_percentage(paul), precision: 0%>%</td>
+          <td class='oli <%= 'bold' if map.current_winner == oli %>'><%= number_with_precision map.win_percentage(oli), precision: 0 %>%</td>
         </tr>
       <% end %>
     </table>
@@ -118,8 +118,8 @@
         <tr>
           <td><%= ws.name %></td>
           <td><%= ws.games.count %></td>
-          <td class='paul <%= 'bold' if ws.current_winner == 'Paul' %>'><%= number_with_precision ws.win_percentage(:paul), precision: 0 %>%</td>
-          <td class='oli <%= 'bold' if ws.current_winner == 'Oli' %>'><%= number_with_precision ws.win_percentage(:oli), precision: 0 %>%</td>
+          <td class='paul <%= 'bold' if ws.current_winner == paul %>'><%= number_with_precision ws.win_percentage(paul), precision: 0 %>%</td>
+          <td class='oli <%= 'bold' if ws.current_winner == oli %>'><%= number_with_precision ws.win_percentage(oli), precision: 0 %>%</td>
         </tr>
       <% end %>
     </table>

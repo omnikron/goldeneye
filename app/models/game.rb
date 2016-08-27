@@ -4,7 +4,6 @@ class Game < ActiveRecord::Base
   has_many :players, through: :scores
   has_many :scores
   has_many :notes
-  default_scope { includes(:scores, :players) }
 
   accepts_nested_attributes_for :scores
 
@@ -47,13 +46,11 @@ class Game < ActiveRecord::Base
       wins.last
     end
 
-    def wins_by(player_name)
-      player = Player.find_by_name(player_name)
+    def wins_by(player)
       wins.where("(SELECT player_id FROM scores WHERE scores.game_id = games.id ORDER BY score DESC LIMIT 1) = ?", player.id)
     end
 
-    def losses_by(player_name)
-      player = Player.find_by_name(player_name)
+    def losses_by(player)
       wins.where("(SELECT player_id FROM scores WHERE scores.game_id = games.id ORDER BY score ASC LIMIT 1) = ?", player.id)
     end
 
@@ -73,8 +70,7 @@ class Game < ActiveRecord::Base
   end
 
   def score(player_name)
-    player = players.find_by_name(player_name)
-    scores.where(player: player).first.score
+    scores.joins(:player).where(players: { name: player_name }).first.score
   end
 
   def winner
@@ -88,7 +84,12 @@ class Game < ActiveRecord::Base
   end
 
   def draw?
-    scores.pluck(:score).uniq.count == 1
+    if draw == nil && persisted?
+      is_draw = Game.draws.exists?(self)
+      self.update_attribute(:draw, is_draw)
+    else
+      draw
+    end
   end
 
   private

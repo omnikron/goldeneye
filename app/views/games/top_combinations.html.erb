@@ -16,10 +16,10 @@
           <td><%= combo.map.name %></td>
           <td><%= combo.weapon_set.name %></td>
           <td><%= combo.games.count %></td>
-          <td class='paul <%= 'bold' if combo.current_winner == 'Paul' %>'><%= number_with_precision combo.win_percentage(:paul), precision: 0%>%</td>
-          <td class='oli <%= 'bold' if combo.current_winner == 'Oli' %>'><%= number_with_precision combo.win_percentage(:oli), precision: 0 %>%</td>
-          <td class='paul <%= 'bold' if combo.current_winner == 'Paul' %>'><%= combo.score('Paul') %></td>
-          <td class='oli <%= 'bold' if combo.current_winner == 'Oli' %>'><%= combo.score('Oli') %></td>
+          <td class='paul <%= 'bold' if combo.current_winner == paul %>'><%= number_with_precision combo.win_percentage(paul), precision: 0%>%</td>
+          <td class='oli <%= 'bold' if combo.current_winner == oli %>'><%= number_with_precision combo.win_percentage(oli), precision: 0 %>%</td>
+          <td class='paul <%= 'bold' if combo.current_winner == paul %>'><%= combo.score('Paul') %></td>
+          <td class='oli <%= 'bold' if combo.current_winner == oli %>'><%= combo.score('Oli') %></td>
         </tr>
       <% end %>
       Total: <%= Combo.top(20).inject(0) {|sum, combo| sum += combo.games.count; sum } %> / <%= Game.count %>
