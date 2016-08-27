@@ -74,10 +74,10 @@ class GamesController < ApplicationController
     end
 
     def paul
-      Player.find_by_name('Paul')
+      @paul ||= Player.find_by_name('Paul')
     end
 
     def oli
-      Player.find_by_name('Oli')
+      @oli ||= Player.find_by_name('Oli')
     end
 end
