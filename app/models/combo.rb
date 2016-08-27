@@ -19,6 +19,6 @@ class Combo
   end
 
   def score(player_name)
-    Score.where(player: Player.find_by_name(player_name)).joins(:game).where(game: games).sum(:score)
+    Score.joins(:player).where(players: { name: player_name}).joins(:game).where(game: games).sum(:score)
   end
 end
