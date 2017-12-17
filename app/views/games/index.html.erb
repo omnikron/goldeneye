@@ -150,7 +150,7 @@
           <td><%= game.map.name %>
           <td><%= game.weapon_set.name %>
           <td><%= game.notes.first.try(:body) %>
-          <td><%= game.created_at.to_date.to_s(:short) %>
+          <td><%= game.created_at.to_date.to_s(:long) %>
         </tr>
         <% if game.different_playing_session?(@games[index + 1]) %>
           <tr>
